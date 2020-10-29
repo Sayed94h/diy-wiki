@@ -1,6 +1,10 @@
 # About
 
-This is a wiki.
+This is wiki and it works now
 
-#about #default
+Great job man
+
+#welldone
+
+#fixed
 

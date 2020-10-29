@@ -40,8 +40,6 @@ app.use(bodyParser.json());
 // $ yarn build
 app.use('/', express.static(path.join(__dirname, 'client', 'build')));
 
-
-
 // GET: '/api/page/:slug'
 // success response: {status: 'ok', body: '<file contents>'}
 // failure response: {status: 'error', message: 'Page does not exist.'}
@@ -49,6 +47,7 @@ app.get('/api/page/:slug', async (req, res) => {
   const filename = slugToPath(req.params.slug);
   try {
     const body = await readFile(filename, 'utf-8');
+    //console.log('body: ', body);
     res.json({ status: 'ok', body });
     // return jsonOK(res, { body });
   } catch (e) {
@@ -56,7 +55,6 @@ app.get('/api/page/:slug', async (req, res) => {
     // return jsonError(res, 'Page does not exist.');
   }
 });
-
 
 // POST: '/api/page/:slug'
 //  body: {body: '<file text content>'}
@@ -66,22 +64,21 @@ app.get('/api/page/:slug', async (req, res) => {
 app.post('/api/page/:slug', async (req, res) => {
   const filename = slugToPath(req.params.slug);
   try {
+    const body = req.body.body;
+    const writeTo = await writeFile(filename, body, 'UTF-8');
 
+    res.json({ status: 'ok' });
   } catch (e) {
-
+    res.json({ status: 'error', message: 'Could not write page.' });
   }
 });
-
 
 // GET: '/api/pages/all'
 // sends an array of all file names in the DATA_DIR
 // file names do not have .md, just the name!
 //  success response: {status:'ok', pages: ['fileName', 'otherFileName']}
 //  failure response: no failure response
-app.get('/api/pages/all', async (req, res) => {
-
-});
-
+app.get('/api/pages/all', async (req, res) => {});
 
 // GET: '/api/tags/all'
 // sends an array of all tag names in all files, without duplicates!
@@ -89,20 +86,14 @@ app.get('/api/pages/all', async (req, res) => {
 // hint: use the TAG_RE regular expression to search the contents of each file
 //  success response: {status:'ok', tags: ['tagName', 'otherTagName']}
 //  failure response: no failure response
-app.get('/api/tags/all', async (req, res) => {
-
-});
-
+app.get('/api/tags/all', async (req, res) => {});
 
 // GET: '/api/tags/:tag'
 // searches through the contents of each file looking for the :tag
 // it will send an array of all file names that contain this tag (without .md!)
 //  success response: {status:'ok', tag: 'tagName', pages: ['tagName', 'otherTagName']}
 //  failure response: no failure response
-app.get('/api/tags/:tag', async (req, res) => {
-
-});
-
+app.get('/api/tags/:tag', async (req, res) => {});
 
 // this needs to be here for the frontend to create new wiki pages
 //  if the route is not one from above
@@ -111,11 +102,10 @@ app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'client', 'build', 'index.html'));
 });
 
-
 app.listen(PORT, (err) => {
   if (err) {
     console.error(err);
     return;
   }
-  console.log(`Wiki app is serving at http://localhost:${PORT}`)
+  console.log(`Wiki app is serving at http://localhost:${PORT}`);
 });
