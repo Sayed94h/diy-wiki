@@ -123,11 +123,20 @@ app.get('/api/tags/all', async (req, res) => {
     }
   }
   let runFunc = await readAsync(allFilesArr);
+  // remove the "#" character because the React program pushes an extra "#" as well
   let noHash = [];
   console.log('tags arr: ', newArr);
   newArr.forEach((item) => {
     noHash.push(item.replace('#', ''));
   });
+  // remove duplicates
+  for (let i = 0; i < noHash.length; i++) {
+    for (let j = i + 1; j < noHash.length; j++) {
+      if (noHash[i] == noHash[j]) {
+        noHash.splice(j, 1);
+      }
+    }
+  }
   console.log('nohash: ', noHash);
   res.json({ status: 'ok', tags: noHash });
 });
@@ -137,7 +146,38 @@ app.get('/api/tags/all', async (req, res) => {
 // it will send an array of all file names that contain this tag (without .md!)
 //  success response: {status:'ok', tag: 'tagName', pages: ['tagName', 'otherTagName']}
 //  failure response: no failure response
-app.get('/api/tags/:tag', async (req, res) => {});
+app.get('/api/tags/:tag', async (req, res) => {
+  const tagName = req.params.tag;
+  //console.log('tagName: ', tagName);
+  var newArr = [];
+  let allFilesArr = await readDir('./' + DATA_DIR);
+
+  async function readAsync(arr) {
+    for (let i = 0; i < arr.length; i++) {
+      let path = `./data/${arr[i]}`;
+      let readEach = await readFile(path, 'UTF-8');
+      // console.log('ReadEach: ', readEach);
+      let arrHash = readEach.match(TAG_RE);
+      if (arrHash !== null) {
+        for (let e = 0; e < arrHash.length; e++) {
+          // console.log('readEach tag: ', arrHash[e]);
+          if (arrHash[e].includes(tagName)) {
+            newArr.push(arr[i]);
+          }
+        }
+      }
+    }
+  }
+  let runFunc = await readAsync(allFilesArr);
+  // remove the file extension
+  let noHash = [];
+  console.log('file arr: ', newArr);
+  newArr.forEach((item) => {
+    noHash.push(item.replace('.md', ''));
+  });
+  console.log('nohash: ', noHash);
+  res.json({ status: 'ok', tag: tagName, pages: noHash });
+});
 
 // this needs to be here for the frontend to create new wiki pages
 //  if the route is not one from above

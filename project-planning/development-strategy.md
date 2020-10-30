@@ -2,7 +2,7 @@
 
 Practicing more about server side programming with Node JS and Express JS
 
-## 0. Setup
+## 1. Setup
 
 1. fork this repo
 1. clone this repo
@@ -52,3 +52,20 @@ This branch is merged to the master after is was completed
 - read each file and check if it contents any word with "#" at the beginning
 - store all words with "#" in an array
 - send the array as a json file with the status "ok"
+
+## 1. tag-in-files
+
+**As a user I would like to be able to find all tags inside files in the database**
+
+This part is done in a branch called `tag-in-files`
+This branch is merged to the master after is was completed
+
+#### tasks
+
+- look inside a directory for file names
+- read each file and check if it contents any word with "#" at the beginning
+- store all words with "#" in an array
+- store the the file name which contains a specific tag in another array
+- remove the file name extension
+- send the array as a json file with the status "ok"
+- remove duplicates of tags from the route "/api/tags/all"
