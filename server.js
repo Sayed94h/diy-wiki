@@ -47,7 +47,7 @@ app.get('/api/page/:slug', async (req, res) => {
   const filename = slugToPath(req.params.slug);
   try {
     const body = await readFile(filename, 'utf-8');
-    //console.log('body: ', body);
+    //console.log('body: ', body, 'type of body', typeof body);
     res.json({ status: 'ok', body });
     // return jsonOK(res, { body });
   } catch (e) {
@@ -78,20 +78,22 @@ app.post('/api/page/:slug', async (req, res) => {
 // file names do not have .md, just the name!
 //  success response: {status:'ok', pages: ['fileName', 'otherFileName']}
 //  failure response: no failure response
+
 app.get('/api/pages/all', async (req, res) => {
-  const allPages = await readDir(DATA_DIR, (err, files) => {
+  const allPages = await readDir('./' + DATA_DIR, (err, files) => {
     if (err) {
       console.log('error is: ', err);
       return;
     }
     let fileArr = files;
+
     let newArr = [];
     for (let i = 0; i < fileArr.length; i++) {
       if (fileArr[i].includes('.md')) {
         newArr.push(fileArr[i].replace('.md', ''));
       }
     }
-    console.log('new files arr: ', newArr);
+
     res.json({ status: 'ok', pages: newArr });
   });
 });
@@ -102,7 +104,33 @@ app.get('/api/pages/all', async (req, res) => {
 // hint: use the TAG_RE regular expression to search the contents of each file
 //  success response: {status:'ok', tags: ['tagName', 'otherTagName']}
 //  failure response: no failure response
-app.get('/api/tags/all', async (req, res) => {});
+app.get('/api/tags/all', async (req, res) => {
+  var newArr = [];
+  let allFilesArr = await readDir('./' + DATA_DIR);
+
+  async function readAsync(arr) {
+    for (let i = 0; i < arr.length; i++) {
+      let path = `./data/${arr[i]}`;
+      let readEach = await readFile(path, 'UTF-8');
+      // console.log('ReadEach: ', readEach);
+      let arrHash = readEach.match(TAG_RE);
+      if (arrHash !== null) {
+        for (let e = 0; e < arrHash.length; e++) {
+          // console.log('readEach tag: ', arrHash[e]);
+          newArr.push(arrHash[e]);
+        }
+      }
+    }
+  }
+  let runFunc = await readAsync(allFilesArr);
+  let noHash = [];
+  console.log('tags arr: ', newArr);
+  newArr.forEach((item) => {
+    noHash.push(item.replace('#', ''));
+  });
+  console.log('nohash: ', noHash);
+  res.json({ status: 'ok', tags: noHash });
+});
 
 // GET: '/api/tags/:tag'
 // searches through the contents of each file looking for the :tag

@@ -33,8 +33,22 @@ This branch is merged to the master after is was completed
 
 #### tasks
 
-- read all files inside a directory
-- check if files have any extension
-- remove the file extension
+- look inside a directory for file names
+- check if file names have any extension
+- remove the file name extension
 - store the file name without extension in an array
-- send the array as a json file
+- send the array as a json file with the status "ok"
+
+## 1. get-all-tags
+
+**As a user I would like to be able to find all tags inside files in the database**
+
+This part is done in a branch called `get-all-tags`
+This branch is merged to the master after is was completed
+
+#### tasks
+
+- look inside a directory for file names
+- read each file and check if it contents any word with "#" at the beginning
+- store all words with "#" in an array
+- send the array as a json file with the status "ok"
