@@ -7,7 +7,7 @@
     "demo": "node demo.min.js",
     "heroku-postbuild": "cd client && yarn && yarn run build"
   },
-  "license": "MIT",
+ 
   "dependencies": {
     "body-parser": "1.19.0",
     "cors": "2.8.5",
@@ -17,5 +17,15 @@
   },
   "devDependencies": {
     "nodemon": "2.0.2"
-  }
+  },
+  "repository": {
+  "type": "git",
+  "url": ""
+},
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+  "url": ""
+},
+  "homepage": ""
 }
