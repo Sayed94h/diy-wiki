@@ -4,8 +4,7 @@
   "scripts": {
     "dev": "nodemon server.js",
     "start": "node server.js",
-    "demo": "node demo.min.js",
-    "heroku-postbuild": "cd client && yarn && yarn run build"
+    "demo": "node demo.min.js"
   },
  
   "dependencies": {
@@ -24,8 +23,5 @@
 },
   "author": "",
   "license": "ISC",
-  "bugs": {
-  "url": ""
-},
   "homepage": ""
 }
