@@ -13,3 +13,6 @@ To create a new file, just link to it and follow the link: [create a new file](f
 #home #default
 
 #notbad
+
+## Thank you for visiting our website
+
